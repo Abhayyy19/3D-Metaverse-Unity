@@ -8,12 +8,14 @@ public class PickUpController : MonoBehaviour
     public Rigidbody rb;
     public BoxCollider coll;
     public Transform player, itemContainer, fpsCam;
+    public GameObject hands;
 
     public float pickUpRange;
     public float dropForwardForce, dropUpwardForce;
 
     public bool equipped;
     public static bool slotFull;
+
 
     private void Start()
     {
@@ -49,6 +51,8 @@ public class PickUpController : MonoBehaviour
         equipped = true;
         slotFull = true;
 
+        hands.SetActive(true);
+
         //make weapon a child of camera and move it to default position
         transform.SetParent(itemContainer);
         transform.localPosition = Vector3.zero;
@@ -66,6 +70,8 @@ public class PickUpController : MonoBehaviour
     {
         equipped = false;
         slotFull = false;
+
+        hands.SetActive(false);
 
         //set parent to null
         transform.SetParent(null);
