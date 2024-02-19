@@ -5,28 +5,35 @@ using UnityEngine;
 public class MissionStart : MonoBehaviour
 {
     public GameObject missionStartPrompt;
-    public GameObject objective1;
+    public ParticleSystem startMissionEffect, stepOneEffect;
+
+    private bool missionStarted = false;
 
     void Start()
     {
         missionStartPrompt.SetActive(false);
+        startMissionEffect.Play();
+        stepOneEffect.Stop();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !missionStarted)
         {
+            missionStarted = true;
             missionStartPrompt.SetActive(true);
-            objective1.SetActive(true);
-            Debug.Log("working");
+            startMissionEffect.Stop();
+            stepOneEffect.Play();
+            Debug.Log("Mission started");
             StartCoroutine(WaitForSec());
         }
     }
 
     IEnumerator WaitForSec()
     {
-        yield return new WaitForSeconds(5);
-        Destroy(missionStartPrompt);
+        yield return new WaitForSeconds(2);
+        missionStartPrompt.SetActive(false);
+        Destroy(startMissionEffect); // Stop the particle system
         Destroy(gameObject);
     }
 }

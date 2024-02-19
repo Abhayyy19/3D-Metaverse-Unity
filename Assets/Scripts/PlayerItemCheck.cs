@@ -18,21 +18,21 @@ public class PlayerItemCheck : MonoBehaviour
             // Check if the held item is the specific object you want to check for
             if (heldItem.CompareTag("FlaskA"))
             {
-                Debug.Log("Player is holding FlaskA.");
+                //Debug.Log("Player is holding FlaskA.");
             }
             else if(heldItem.CompareTag("FlaskB"))
             {
-                Debug.Log("Player is holding FlaskB.");
+                //Debug.Log("Player is holding FlaskB.");
             }
             else if(heldItem.CompareTag("FlaskC"))
             {
-                Debug.Log("Player is holding FlaskC.");
+                //Debug.Log("Player is holding FlaskC.");
             }
         }
         else
         {
             // Player is not holding any object
-            Debug.Log("Player is not holding any object.");
+           // Debug.Log("Player is not holding any object.");
         }
     }
 }

@@ -7,7 +7,7 @@ public class PickUpController : MonoBehaviour
     
     public Rigidbody rb;
     public BoxCollider coll;
-    public Transform player, itemContainer, fpsCam;
+    public Transform player, itemContainer, fpsCam, dropLocation;
     public GameObject hands;
 
     public float pickUpRange;
@@ -66,27 +66,40 @@ public class PickUpController : MonoBehaviour
         //Enable Script
         
     }
-    private void Drop()
+    public void Drop()
     {
         equipped = false;
         slotFull = false;
 
         hands.SetActive(false);
 
-        //set parent to null
-        transform.SetParent(null);
-
-
-        //Make RigidBody Kinematic and BOxCollider a trigger
+        // Make Rigidbody Kinematic and BoxCollider a trigger
         rb.isKinematic = false;
         coll.isTrigger = false;
 
-        //item carries momentum of the player
-        rb.velocity = player.GetComponent<Rigidbody>().velocity;
+        // Calculate the distance between the player and the dropLocation
+        float distanceToDropLocation = Vector3.Distance(player.position, dropLocation.position);
 
-        //Add Force
-        rb.AddForce(fpsCam.forward * dropForwardForce, ForceMode.Impulse);
-        rb.AddForce(fpsCam.up * dropUpwardForce, ForceMode.Impulse);
+        if (distanceToDropLocation <= pickUpRange)
+        {
+            // If the player is within range of the dropLocation, fit the item to the dropLocation
+            transform.SetParent(dropLocation);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = Vector3.one;
+        }
+        else
+        {
+            // If the player is out of range, drop the item where the player is standing
+            transform.SetParent(null);
+            transform.position = player.position;
+        }
 
+        // Item carries momentum of the player
+        //rb.velocity = player.GetComponent<Rigidbody>().velocity;
+
+        // Add Force
+        //rb.AddForce(fpsCam.forward * dropForwardForce, ForceMode.Impulse);
+        //rb.AddForce(fpsCam.up * dropUpwardForce, ForceMode.Impulse);
     }
 }
