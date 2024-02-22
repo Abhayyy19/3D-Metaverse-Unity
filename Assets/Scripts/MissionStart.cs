@@ -5,6 +5,8 @@ using UnityEngine;
 public class MissionStart : MonoBehaviour
 {
     public GameObject missionStartPrompt;
+    public GameObject stepOneTrigger;
+    public Camera phase1Cam, phase2Cam, phase3Cam; 
     public ParticleSystem startMissionEffect, stepOneEffect;
 
     private bool missionStarted = false;
@@ -12,8 +14,12 @@ public class MissionStart : MonoBehaviour
     void Start()
     {
         missionStartPrompt.SetActive(false);
+        stepOneTrigger.SetActive(false);
         startMissionEffect.Play();
         stepOneEffect.Stop();
+        phase1Cam.enabled = false;
+        phase2Cam.enabled = false;
+        phase3Cam.enabled = false;
     }
 
     void OnTriggerEnter(Collider other)
@@ -24,6 +30,7 @@ public class MissionStart : MonoBehaviour
             missionStartPrompt.SetActive(true);
             startMissionEffect.Stop();
             stepOneEffect.Play();
+            stepOneTrigger.SetActive(true);
             Debug.Log("Mission started");
             StartCoroutine(WaitForSec());
         }

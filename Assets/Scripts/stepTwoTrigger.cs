@@ -7,9 +7,10 @@ public class stepTwoTrigger : MonoBehaviour
 {
     public GameObject stepTwoPrompt;
     public GameObject addToBurettePrompt;
+    public GameObject phaseTwoTrigger;
     public ParticleSystem stepTwoEffect;
     public Camera mainCamera;
-    public Camera cutsceneCamera;
+    public Camera cutsceneCamera, cutsceneCamera2;
     public GameObject cutsceneTimeline;
 
     private bool playerInsideCollider = false;
@@ -19,7 +20,10 @@ public class stepTwoTrigger : MonoBehaviour
     {
         stepTwoPrompt.SetActive(false);
         addToBurettePrompt.SetActive(false);
+        phaseTwoTrigger.SetActive(false);
         cutsceneCamera.enabled = false;
+        cutsceneCamera2.enabled = false;
+        stepTwoEffect.Play();
     }
 
     void OnTriggerEnter(Collider other)
@@ -53,19 +57,23 @@ public class stepTwoTrigger : MonoBehaviour
         // Check for "F" key press and collider collision
         if (playerInsideCollider && Input.GetKeyDown(KeyCode.F) && !cutsceneTriggered)
         {
-            addToBurettePrompt.SetActive(false);
             Debug.Log("Animation Started");
-            addToBurettePrompt.SetActive(false);
-            StartCoroutine(FinishCutscene());
-            cutsceneCamera.enabled = true;
-            mainCamera.enabled = false;
-            cutsceneTimeline.SetActive(true);
-            cutsceneTriggered = true;
+            StartCutscene();
         }
-        else if (playerInsideCollider) // If player is inside collider, display addToBurettePrompt
+        else if (playerInsideCollider && !cutsceneTriggered) // If player is inside collider and animation not triggered, display addToBurettePrompt
         {
             addToBurettePrompt.SetActive(true);
         }
+    }
+
+    void StartCutscene()
+    {
+        addToBurettePrompt.SetActive(false); // Disable the prompt when animation starts
+        StartCoroutine(FinishCutscene());
+        cutsceneCamera.enabled = true;
+        mainCamera.enabled = false;
+        cutsceneTimeline.SetActive(true);
+        cutsceneTriggered = true;
     }
 
     IEnumerator WaitForSec()
@@ -80,6 +88,7 @@ public class stepTwoTrigger : MonoBehaviour
         Debug.Log("Animation Finished");
         cutsceneCamera.enabled = false;
         mainCamera.enabled = true;
-        Destroy(gameObject);
+        phaseTwoTrigger.SetActive(true);
+        Destroy(gameObject); // Destroy this script component
     }
 }
